@@ -32,7 +32,7 @@ public class LevelPack {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.parse(context.getAssets().open(fileName + ".compressed"));
+            doc = db.parse(context.getAssets().open(fileName));// + ".compressed"
             doc.getDocumentElement().normalize();
         } catch (Exception e) {
             throw new RuntimeException("Error loading level pack " + fileName, e);

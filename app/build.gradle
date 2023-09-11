@@ -12,31 +12,13 @@ android {
         targetSdkVersion 33
         versionCode 306
         versionName "3.6"
+
+        buildConfigField "boolean", "DEBUG_LEVELS", "false"
     }
 
-    signingConfigs {
-        release {
-            if (project.hasProperty("SIGNING2")) {
-                storeFile file(SIGNING2_STORE_FILE)
-                storePassword SIGNING2_STORE_PASSWORD
-                keyAlias SIGNING2_KEY_ALIAS
-                keyPassword SIGNING2_KEY_PASSWORD
-            }
-        }
-    }
 
     buildTypes {
-        debug {
-            buildConfigField "boolean", "DEBUG_LEVELS", "false"
-            signingConfig signingConfigs.debug
-        }
-        debugLevels {
-            buildConfigField "boolean", "DEBUG_LEVELS", "true"
-            signingConfig signingConfigs.debug
-        }
         release {
-            buildConfigField "boolean", "DEBUG_LEVELS", "false"
-            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
@@ -46,38 +28,38 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    aaptOptions {
-        ignoreAssetsPattern '!.git:!*.xml:!LICENSE'
-    }
-
-    tasks.register("compressLevelFile") {
-        doLast {
-            compress(projectDir.path + '/src/main/assets/levelsEasy.xml')
-            compress(projectDir.path + '/src/main/assets/levelsMedium.xml')
-            compress(projectDir.path + '/src/main/assets/levelsHard.xml')
-            compress(projectDir.path + '/src/main/assets/levelsCommunity.xml')
-        }
-    }
-    preBuild.dependsOn compressLevelFile
+//
+//    aaptOptions {
+//        ignoreAssetsPattern '!.git:!*.xml:!LICENSE'
+//    }
+//
+//    tasks.register("compressLevelFile") {
+//        doLast {
+//            compress(projectDir.path + '/src/main/assets/levelsEasy.xml')
+//            compress(projectDir.path + '/src/main/assets/levelsMedium.xml')
+//            compress(projectDir.path + '/src/main/assets/levelsHard.xml')
+//            compress(projectDir.path + '/src/main/assets/levelsCommunity.xml')
+//        }
+//    }
+//    preBuild.dependsOn compressLevelFile
 }
-
-if (project.hasProperty("TRIPLET_API_KEY")) {
-    apply plugin: 'com.github.triplet.play'
-    play {
-        track = 'alpha'
-        serviceAccountCredentials = file(TRIPLET_API_KEY)
-    }
-}
-
-def compress(path) {
-    String levels = file(path).text
-    print '  Original: ' + levels.length() + ' bytes'
-    levels = levels.replaceAll("\\s+", " ").replaceAll("\"\n ?", "\" ").replaceAll(" ?\n ?", "")
-    levels = levels.replaceAll("=\" ", "=\"").replaceAll("<!--([^>]*)-->", "") + '\n'
-    println ', compressed: ' + levels.length() + ' bytes'
-    file(path + '.compressed').text = levels
-}
+//
+//if (project.hasProperty("TRIPLET_API_KEY")) {
+//    apply plugin: 'com.github.triplet.play'
+//    play {
+//        track = 'alpha'
+//        serviceAccountCredentials = file(TRIPLET_API_KEY)
+//    }
+//}
+//
+//def compress(path) {
+//    String levels = file(path).text
+//    print '  Original: ' + levels.length() + ' bytes'
+//    levels = levels.replaceAll("\\s+", " ").replaceAll("\"\n ?", "\" ").replaceAll(" ?\n ?", "")
+//    levels = levels.replaceAll("=\" ", "=\"").replaceAll("<!--([^>]*)-->", "") + '\n'
+//    println ', compressed: ' + levels.length() + ' bytes'
+//    file(path + '.compressed').text = levels
+//}
 
 dependencies {
     annotationProcessor "androidx.annotation:annotation:1.3.0"
